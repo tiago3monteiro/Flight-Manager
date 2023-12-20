@@ -12,7 +12,7 @@
 
 Application::Application()
 {
-    std::ifstream in("../airports.csv");
+    std::ifstream in("../csv/airports.csv");
     std::string line;
     std::getline(in, line, '\n'); // taking out the first line;
     while (std::getline(in, line, '\n'))
@@ -48,7 +48,8 @@ Application::Application()
         graph.addAirport(airport);
     }
 
-    std::ifstream in1("../airlines.csv");
+
+    std::ifstream in1("../csv/airlines.csv");
     std::getline(in1, line, '\n');
     while (std::getline(in1, line, '\n'))
     {
@@ -62,34 +63,29 @@ Application::Application()
         airlines.insert(airline);
     }
 
-    std::ifstream in2("../flights.csv");
+    std::ifstream in2("../csv/flights.csv");
     std::getline(in2, line, '\n');
     int i = 0;
-    while (std::getline(in2, line, '\n'))
-    {
+    while (std::getline(in2, line, '\n')){
+
         std::istringstream iss(line);
         std::vector<std::string> words(3);
-        std::getline(iss, words[0], ',');
-        std::getline(iss, words[1], ',');
-        std::getline(iss, words[2], ',');
+        std::getline(iss, words[0], ','); //source code
+        std::getline(iss, words[1], ','); //dest code
+        std::getline(iss, words[2], ','); //airline code
 
-        Airport source;
-        Airport dest;
+        Airport* source;
+        Airport* dest;
         Airline theAirline;
 
         for(auto airport: airports)
         {
             if(airport.getCode() == words[0])
-            {
-                source = airport;
-
-            }
+                source = new Airport(airport);
 
             if(airport.getCode() == words[1])
-            {
-                dest = airport;
+                dest = new Airport(airport);
 
-            }
         }
 
         for(auto airline: airlines)
@@ -99,30 +95,23 @@ Application::Application()
                 theAirline = airline;
             }
         }
+        graph.addFlight(source,dest,theAirline);
         i++;
-        Flight flight(dest,theAirline);
-        std::cout << source.getCode()<< "->" ;
-        std::cout << flight.getDest()->getCode() << " " ;
-        std::cout << flight.getAirline().getCode() << std::endl;
-        source.addFlight(flight);
-        if(i == 5) break;
     }
 
 
 }
+
 void Application::getVertex()
 {
-    for(auto airport: graph.getAirports())
+    for(auto airport: graph.getAirportsSet())
     {
-
-        //std::cout << airport.getName() <<":" <<std::endl;
-
-        for(auto flight: airport.getFlights())
+        std::cout << airport->getCode() << ": ";
+        for(auto flight: airport->getFlights())
         {
-       //    std::cout << flight.getDest()->getName() << " ";
+            std::cout << flight.getDest()->getCode() << " (" << flight.getAirline().getCode() << ")  ";
         }
-      //  std::cout << std::endl;
-
+        std::cout << std::endl;
     }
 
 }

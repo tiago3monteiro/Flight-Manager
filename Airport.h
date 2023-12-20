@@ -16,7 +16,6 @@ class Airport {
 
 public:
     Airport();
-
     Airport(std::string code, std::string name, std::string city,std::string country,float lat,float lon);//info
     const std::string &getCode() const;
     const std::string &getName() const;
@@ -25,10 +24,9 @@ public:
     float getLat() const;
     float getLon() const;
     const std::vector<Flight> &getFlights() const; //edges
-
     bool operator< (const Airport& airport) const;
+    bool operator== (const Airport& airport) const;
     void addFlight(Flight flight); //add edges
-
 
 private:
     std::string code;

@@ -4,9 +4,9 @@
 
 #include "Flight.h"
 
-Flight::Flight(Airport dest, Airline airline)
+Flight::Flight(Airport* dest, Airline airline)
 {
-    this->dest = new Airport(dest);
+    this->dest = dest;
     this->airline = airline;
 
 }

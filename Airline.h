@@ -14,13 +14,9 @@ public:
     Airline();
     Airline(std::string code,std::string name,std::string callSign,std::string country);
     bool operator< (const Airline& airline) const;
-
     const std::string &getCode() const;
-
     const std::string &getName() const;
-
     const std::string &getCallSign() const;
-
     const std::string &getCountry() const;
 
 private:
@@ -28,7 +24,6 @@ private:
     std::string name;
     std::string callSign;
     std::string country;
-
 };
 
 

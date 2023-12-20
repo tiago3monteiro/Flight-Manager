@@ -53,4 +53,8 @@ void Airport::addFlight(Flight flight){
 
 }
 
+bool Airport::operator==(const Airport &airport) const {
+    return airport.getCode() == this->getCode();
+}
+
 

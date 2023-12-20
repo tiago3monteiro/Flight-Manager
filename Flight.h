@@ -14,7 +14,7 @@ class Airline;
 class Flight {
 
 public:
-    Flight(Airport dest, Airline airline);
+    Flight(Airport *dest, Airline airline);
 
     Airport *getDest() const;
 

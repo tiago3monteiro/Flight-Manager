@@ -5,16 +5,39 @@
 #include <iostream>
 #include "Graph.h"
 
-void Graph::addAirport(Airport airport)
+Graph::Graph() {}
+
+void Graph::addAirport(Airport airport){
+
+    airportsSet.insert(new Airport(airport));
+}
+
+Airport* Graph::findAirport(std::string code)
 {
-    vertexSet.push_back(airport);
-
+    for(auto airport: airportsSet)
+    {
+        if(airport->getCode() == code)
+            return airport;
+    }
+    return nullptr;
 }
 
-const std::vector<Airport> &Graph::getAirports() const {
-    return vertexSet;
+
+bool Graph::addFlight(Airport* source, Airport* dest, Airline airline) {
+
+
+    for(auto airport: airportsSet)
+    {
+        if(airport->getName() == source->getName())
+        {
+            Flight flight(dest,airline);
+            airport->addFlight(flight);
+            return true;
+        }
+    }
+    return false;
 }
 
-Graph::Graph() {
-
+const std::set<Airport *> &Graph::getAirportsSet() const {
+    return airportsSet;
 };

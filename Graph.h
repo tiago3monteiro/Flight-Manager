@@ -7,17 +7,20 @@
 
 
 #include <vector>
+#include <set>
 #include "Airport.h"
 
 class Graph {
 public:
     Graph();
     void addAirport(Airport airport);
-
+    Airport* findAirport(std::string code);
+    bool addFlight(Airport* source, Airport* dest ,Airline airline);
     const std::vector<Airport> &getAirports() const;
+    const std::set<Airport *> &getAirportsSet() const;
 
 private:
-    std::vector<Airport> vertexSet;      // vertex set
+    std::set<Airport*> airportsSet; // vertex set
 
 };
 
