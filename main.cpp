@@ -7,7 +7,11 @@
 
 int main() {
     Application app;
-    app.getVertex();
-
+    //app.getVertex();
+    //app.numberOfAirports();
+  //  app.flightsFromAirport("OPO");
+   // app.flightsLeavingPerCity();
+   // app.flightsArrivingPerCity();
+    app.flightsPerAirline();
     return 0;
 }

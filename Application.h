@@ -16,6 +16,11 @@ class Application {
 public:
     Application();
     void getVertex();
+    void numberOfAirports();
+    void flightsFromAirport(std::string airport);
+    void flightsLeavingPerCity();
+    void flightsArrivingPerCity();
+    void flightsPerAirline();
 
 private:
     std::set<Airport> airports;

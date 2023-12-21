@@ -6,6 +6,8 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <map>
+#include <algorithm>
 #include "Application.h"
 #include "Airport.h"
 #include "Flight.h"
@@ -99,11 +101,11 @@ Application::Application()
         i++;
     }
 
-
+    std::cout << "parse done"<<std::endl;
 }
 
-void Application::getVertex()
-{
+void Application::getVertex(){
+
     for(auto airport: graph.getAirportsSet())
     {
         std::cout << airport->getCode() << ": ";
@@ -114,4 +116,162 @@ void Application::getVertex()
         std::cout << std::endl;
     }
 
+}
+
+void Application::numberOfAirports()
+{
+    std::cout << "Global number of airports: "<< airports.size() <<std::endl;
+    std::cout << "Global number of airlines: " << airlines.size() << std::endl;
+
+}
+
+void Application::flightsFromAirport(std::string airport)
+{
+    std::set<std::string> differentAirlines;
+    std::map<std::string, std::vector<Airline>> trackAirlines;
+    auto thisAirport = graph.findAirport(airport);
+    std::cout << "From " << thisAirport->getName() << " we have the following destinations done for the following airlines:"<<std::endl;
+
+    for(auto flight:thisAirport->getFlights())
+    {
+        differentAirlines.insert(flight.getAirline().getCode());
+        auto it = trackAirlines.find(flight.getDest()->getName());
+        if (it != trackAirlines.end())
+        {
+            it->second.push_back(flight.getAirline());
+        }
+        else
+        {
+            std::vector<Airline> v;
+            v.push_back(flight.getAirline());
+            trackAirlines.insert({flight.getDest()->getName(), v});
+        }
+    }
+    for(auto pair: trackAirlines)
+    {
+        std::cout << pair.first << ": ";
+        for(auto airlines: pair.second)
+        {
+            std::cout << airlines.getName() << "  ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << trackAirlines.size() << " different airports are reachable from " << thisAirport->getName() << std::endl;
+    std::cout << differentAirlines.size() << " airlines operate from " << thisAirport->getName() << std::endl;
+
+}
+
+void Application::flightsLeavingPerCity()
+{
+    std::map<std::string, int> cityFlightCount;
+
+    for (auto airport : graph.getAirportsSet())
+    {
+        for(auto flight: airport->getFlights()) //flights leaving the city
+        {
+            auto it = cityFlightCount.find(airport->getCity());
+            if (it != cityFlightCount.end())
+            {
+                it->second++;
+            }
+            else
+            {
+                cityFlightCount.insert({airport->getCity(), 1});
+            }
+        }
+
+    }
+
+    std::vector<std::pair<std::string, int>> sortedCities(cityFlightCount.begin(), cityFlightCount.end());
+    std::sort(sortedCities.begin(), sortedCities.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second;
+    });
+
+    // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
+
+    std::cout << "Flights leaving per City (Descending order):" << std::endl;
+    int i = 0;
+    for (const auto& entry : sortedCities)
+    {
+        std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
+        i+=entry.second;
+    }
+    std::cout << "total: " << i;
+}
+
+
+void Application::flightsArrivingPerCity()
+{
+    std::map<std::string, int> cityFlightCount;
+
+    for (auto airport : graph.getAirportsSet())
+    {
+        for(auto flight: airport->getFlights()) //flights leaving the city
+        {
+            auto it = cityFlightCount.find(flight.getDest()->getCity());
+            if (it != cityFlightCount.end())
+            {
+                it->second++;
+            }
+            else
+            {
+                cityFlightCount.insert({flight.getDest()->getCity(), 1});
+            }
+        }
+
+    }
+
+    std::vector<std::pair<std::string, int>> sortedCities(cityFlightCount.begin(), cityFlightCount.end());
+    std::sort(sortedCities.begin(), sortedCities.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second;
+    });
+
+    // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
+
+    std::cout << "Flights arriving per City (Descending order):" << std::endl;
+    int i = 0;
+    for (const auto& entry : sortedCities)
+    {
+        std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
+        i+=entry.second;
+    }
+    std::cout << "total: " << i;
+}
+
+void Application::flightsPerAirline()
+{
+    std::map<std::string, int> cityFlightCount;
+
+    for (auto airport : graph.getAirportsSet())
+    {
+        for(auto flight: airport->getFlights()) //flights leaving the city
+        {
+            auto it = cityFlightCount.find(flight.getAirline().getName());
+            if (it != cityFlightCount.end())
+            {
+                it->second++;
+            }
+            else
+            {
+                cityFlightCount.insert({flight.getAirline().getName(), 1});
+            }
+        }
+
+    }
+
+    std::vector<std::pair<std::string, int>> sortedCities(cityFlightCount.begin(), cityFlightCount.end());
+    std::sort(sortedCities.begin(), sortedCities.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second;
+    });
+
+    // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
+
+    std::cout << "Total number of flights each airline has (Descending order):" << std::endl;
+    int i = 0;
+    for (const auto& entry : sortedCities)
+    {
+        std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
+        i+=entry.second;
+    }
+    std::cout << "total: " << i;
 }

@@ -16,7 +16,7 @@ Airport* Graph::findAirport(std::string code)
 {
     for(auto airport: airportsSet)
     {
-        if(airport->getCode() == code)
+        if(airport->getCode() == code || airport->getName() == code)
             return airport;
     }
     return nullptr;

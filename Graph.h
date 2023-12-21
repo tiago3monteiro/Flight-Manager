@@ -16,7 +16,6 @@ public:
     void addAirport(Airport airport);
     Airport* findAirport(std::string code);
     bool addFlight(Airport* source, Airport* dest ,Airline airline);
-    const std::vector<Airport> &getAirports() const;
     const std::set<Airport *> &getAirportsSet() const;
 
 private:
