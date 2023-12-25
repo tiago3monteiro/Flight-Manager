@@ -7,11 +7,12 @@
 
 int main() {
     Application app;
-    //app.getVertex();
-    //app.numberOfAirports();
-  //  app.flightsFromAirport("OPO");
-   // app.flightsLeavingPerCity();
-   // app.flightsArrivingPerCity();
-    app.flightsPerAirline();
+//    app.numberOfAirports();
+    //app.flightsFromAirport("OPO");
+    //app.flightsLeavingPerCity();
+      //app.flightsArrivingPerCity();
+   //   app.flightsPerAirline();
+    //app.reachableDestinations("OPO",5);
+    app.maximumTrip();
     return 0;
 }

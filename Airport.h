@@ -27,6 +27,8 @@ public:
     bool operator< (const Airport& airport) const;
     bool operator== (const Airport& airport) const;
     void addFlight(Flight flight); //add edges
+    bool isVisited() const;
+    void setVisited(bool visited);
 
 private:
     std::string code;
@@ -36,6 +38,7 @@ private:
     std::vector<Flight> flights;
     float lat;
     float lon;
+    bool visited;
 
 };
 

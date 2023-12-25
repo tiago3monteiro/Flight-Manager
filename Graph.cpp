@@ -9,35 +9,35 @@ Graph::Graph() {}
 
 void Graph::addAirport(Airport airport){
 
-    airportsSet.insert(new Airport(airport));
+    auto it = airports.find(airport.getCode());
+
+    if(it == airports.end())
+    {
+        airports[airport.getCode()] = new Airport(airport);
+    }
+
 }
 
 Airport* Graph::findAirport(std::string code)
 {
-    for(auto airport: airportsSet)
-    {
-        if(airport->getCode() == code || airport->getName() == code)
-            return airport;
-    }
-    return nullptr;
+    auto it = airports.find(code);
+    if(it == airports.end()) return nullptr;
+    return it->second;
 }
 
 
 bool Graph::addFlight(Airport* source, Airport* dest, Airline airline) {
 
+    auto sourceIt = airports.find(source->getCode());
+    auto destIt = airports.find(dest->getCode());
+    if(sourceIt == airports.end() || destIt == airports.end()) return false;
+    auto sourceAirport = sourceIt->second;
+    Flight flight (destIt->second,airline);
+    sourceAirport->addFlight(flight);
+    return true;
 
-    for(auto airport: airportsSet)
-    {
-        if(airport->getName() == source->getName())
-        {
-            Flight flight(dest,airline);
-            airport->addFlight(flight);
-            return true;
-        }
-    }
-    return false;
 }
 
-const std::set<Airport *> &Graph::getAirportsSet() const {
-    return airportsSet;
-};
+const std::unordered_map<std::string, Airport *> &Graph::getAirports() const {
+    return airports;
+}

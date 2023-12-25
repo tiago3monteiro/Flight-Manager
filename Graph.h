@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <set>
+#include <unordered_map>
 #include "Airport.h"
 
 class Graph {
@@ -16,10 +17,10 @@ public:
     void addAirport(Airport airport);
     Airport* findAirport(std::string code);
     bool addFlight(Airport* source, Airport* dest ,Airline airline);
-    const std::set<Airport *> &getAirportsSet() const;
+    const std::unordered_map<std::string, Airport *> &getAirports() const;
 
 private:
-    std::set<Airport*> airportsSet; // vertex set
+    std::unordered_map<std::string,Airport*> airports; //airportsSet; // vertex set
 
 };
 

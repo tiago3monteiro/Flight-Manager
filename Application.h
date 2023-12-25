@@ -7,6 +7,8 @@
 
 
 #include <set>
+#include <queue>
+#include <unordered_map>
 #include "Airport.h"
 #include "Airline.h"
 #include "Graph.h"
@@ -21,10 +23,12 @@ public:
     void flightsLeavingPerCity();
     void flightsArrivingPerCity();
     void flightsPerAirline();
+    void reachableDestinations( std::string airport,int n);
+    void maximumTrip();
 
 private:
     std::set<Airport> airports;
-    std::set<Airline> airlines;
+    std::unordered_map<std::string ,Airline> airlines;
     Graph graph;
 
 };

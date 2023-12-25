@@ -57,4 +57,12 @@ bool Airport::operator==(const Airport &airport) const {
     return airport.getCode() == this->getCode();
 }
 
+bool Airport::isVisited() const {
+    return visited;
+}
+
+void Airport::setVisited(bool visited) {
+    Airport::visited = visited;
+}
+
 
