@@ -81,4 +81,28 @@ void Airport::setLow(int low) {
     Airport::low = low;
 }
 
+int Airport::getInbound() const {
+    return inbound;
+}
+
+void Airport::setInbound(int inbound) {
+    Airport::inbound = inbound;
+}
+
+int Airport::getOutbound() const {
+    return outbound;
+}
+
+void Airport::setOutbound(int outbound) {
+    Airport::outbound = outbound;
+}
+
+bool Airport::isProcessed() const {
+    return processed;
+}
+
+void Airport::setProcessed(bool processed) {
+    this->processed = processed;
+}
+
 

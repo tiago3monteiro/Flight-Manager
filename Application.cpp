@@ -87,15 +87,57 @@ Application::Application()
         graph.addFlight(source,dest,airline->second);
 
     }
+    for(auto airpot: graph.getAirports()){
+        airpot.second->setOutbound(0);
+        airpot.second->setInbound(0);
+    }
+
+    for(auto airpot: graph.getAirports()){
+
+        airpot.second->setOutbound(airpot.second->getFlights().size());
+        for(auto flight: airpot.second->getFlights())
+        {
+            flight.getDest()->setInbound(flight.getDest()->getInbound()+1);
+        }
+    }
 
     std::cout << "parse done"<<std::endl;
 }
 
 
-void Application::numberOfAirports()
+void Application::globalStatistics(int key)
 {
-    std::cout << "Global number of airports: "<< airports.size() <<std::endl;
-    std::cout << "Global number of airlines: " << airlines.size() << std::endl;
+    int count_flights = 0;
+    for(auto airport: graph.getAirports()) airport.second->setVisited(false);
+    std::queue<Airport*> q;
+    for(auto airport: graph.getAirports())
+    {
+        if(!airport.second->isVisited())
+        {
+            q.push(airport.second);
+            airport.second->setVisited(true);
+            while(!q.empty())
+            {
+                auto current = q.front();
+                count_flights += current->getFlights().size();
+                q.pop();
+                for(auto flight: current->getFlights())
+                {
+                    if(!flight.getDest()->isVisited())
+                    {
+                        q.push(flight.getDest());
+                        flight.getDest()->setVisited(true);
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    if(key==1)std::cout << "Global number of airports: "<< airports.size() <<std::endl;
+    if(key==2)std::cout << "Global number of flights: "<< count_flights <<std::endl;
+    if(key==3)std::cout << "Global number of airlines: " << airlines.size() << std::endl;
 
 }
 
@@ -104,6 +146,7 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
     std::set<std::string> differentAirlines;
     std::set<std::string> differentCities;
     std::set<std::string> differentCountries;
+    int count = 0;
     std::map<std::string, std::vector<Airline>> trackAirlines;
 
     auto thisAirport = graph.findAirport(airport);
@@ -111,6 +154,7 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
 
     for(auto flight:thisAirport->getFlights())
     {
+        count++;
         differentAirlines.insert(flight.getAirline().getCode());
         differentCities.insert(flight.getDest()->getCity());
         differentCountries.insert(flight.getDest()->getCountry());
@@ -135,6 +179,7 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
         }
         std::cout << std::endl;
     }
+    std::cout << count << " different flights available from " << thisAirport->getName() << std::endl;
     std::cout << differentCities.size() << " different cities are reachable from " << thisAirport->getName() << std::endl;
     std::cout << differentCountries.size() << " different cities are reachable from " << thisAirport->getName() << std::endl;
     std::cout << trackAirlines.size() << " different airports are reachable from " << thisAirport->getName() << std::endl;
@@ -142,7 +187,7 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
 
 }
 
-void Application::flightsLeavingPerCity()
+void Application::flightsLeavingPerCity(std::string cityName)
 {
     std::map<std::string, int> cityFlightCount;
 
@@ -170,18 +215,19 @@ void Application::flightsLeavingPerCity()
 
     // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
 
-    std::cout << "Flights leaving per City (Descending order):" << std::endl;
-    int i = 0;
+    //std::cout << "Flights leaving from " << cityName <<" :"<< std::endl;
     for (const auto& entry : sortedCities)
     {
-        std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
-        i+=entry.second;
+        if(entry.first == cityName)
+        {
+            std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
+            break;
+        }
     }
-    std::cout << "total: " << i;
 }
 
 
-void Application::flightsArrivingPerCity()
+void Application::flightsArrivingPerCity(std::string City)
 {
     std::map<std::string, int> cityFlightCount;
 
@@ -209,17 +255,14 @@ void Application::flightsArrivingPerCity()
 
     // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
 
-    std::cout << "Flights arriving per City (Descending order):" << std::endl;
-    int i = 0;
+   // std::cout << "Flights arriving per City (Descending order):" << std::endl;
     for (const auto& entry : sortedCities)
     {
-        std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
-        i+=entry.second;
+        if(entry.first ==  City) std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
     }
-    std::cout << "total: " << i;
 }
 
-void Application::flightsPerAirline()
+void Application::flightsPerAirline(std::string airlineName)
 {
     std::map<std::string, int> cityFlightCount;
 
@@ -247,14 +290,11 @@ void Application::flightsPerAirline()
 
     // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
 
-    std::cout << "Total number of flights each airline has (Descending order):" << std::endl;
-    int i = 0;
+  //  std::cout << "Total number of flights each airline has (Descending order):" << std::endl;
     for (const auto& entry : sortedCities)
     {
-        std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
-        i+=entry.second;
+        if(entry.first == airlineName) std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
     }
-    std::cout << "total: " << i;
 }
 
 void Application::reachableDestinations(std::string airport,int n)
@@ -314,14 +354,8 @@ void Application::essencialAirports() {
         }
     }
 
-    int i = 1;
-    for (auto airport : res) {
-        std::cout << i << " " << airport->getCode() << " ";
-        i++;
-    }
-    std::cout << std::endl << res.size();
+    std::cout << "There are " << res.size() << " essential airports to the network." <<std::endl;
 }
-
 
 
 void dfs_essential(Graph graph, Airport* airport, std::set<Airport*>& res, std::stack<Airport*>& s, int index) {
@@ -333,6 +367,7 @@ void dfs_essential(Graph graph, Airport* airport, std::set<Airport*>& res, std::
     bool isArticulation = false;
 
     for (auto flight: airport->getFlights()) {
+
         if (!flight.getDest()->getNum()) {
             children++;
             dfs_essential(graph, flight.getDest(), res, s, index);
@@ -347,7 +382,7 @@ void dfs_essential(Graph graph, Airport* airport, std::set<Airport*>& res, std::
             airport->setLow(std::min(airport->getLow(), flight.getDest()->getNum()));
         }
     }
-        if ((airport->getNum() == 1 && children > 1) || (airport->getNum() > 1 && isArticulation)) {
+        if ((!airport->getInbound() && children > 1) || (airport->getNum() > 1 && isArticulation)) {
             res.insert(airport);
         }
     s.pop();
@@ -363,7 +398,6 @@ bool inStack(std::stack<Airport*>& s, Airport* airport) {
         tempStack.push(current);
 
         if (current == airport) {
-            // Restore the original stack
             while (!tempStack.empty()) {
                 s.push(tempStack.top());
                 tempStack.pop();
@@ -371,36 +405,104 @@ bool inStack(std::stack<Airport*>& s, Airport* airport) {
             return true;
         }
     }
-
-    // Restore the original stack
     while (!tempStack.empty()) {
         s.push(tempStack.top());
         tempStack.pop();
     }
-
     return false;
 }
 
-/*
+void Application::greatestAirtraffic(int k) {
 
-std::pair<int, Airport*> Application::dfs_max(Airport* airport, int currentDepth) {
-    airport->setVisited(true);
+    std::vector<std::pair<Airport*,int>> outcome;
+    for(auto airport: graph.getAirports())
+    {
+        outcome.push_back({airport.second,airport.second->getInbound()+airport.second->getOutbound()});
+    }
+    std::sort(outcome.begin(), outcome.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second;});
 
-    int maxDepth = currentDepth;
-    Airport* farthestAirport = airport;
+    for(auto par: outcome)
+    {
+        if(k == 0) break;
+        std::cout << par.first->getName() << " has " << par.second << " flights"<<std::endl;
+        k--;
+    }
+}
 
-    for (Flight flight : airport->getFlights()) {
-        if (!flight.getDest()->isVisited()) {
-            auto childOutcome = dfs_max(flight.getDest(), currentDepth + 1);
+void Application::maximumTrip() {
+    std::vector<std::pair<Airport*,Airport*>> res;
+    int max = 0;
+    for(auto airport: graph.getAirports()) airport.second->setVisited(false);
+    for(auto airport: graph.getAirports())
+    {
+        if(!airport.second->isVisited())
+        {
+            airport.second->setVisited(true);
+            auto outcome = max_distance_bfs(airport.second);
+            if(outcome.second > max)
+            {
+                res.clear();
+                max = outcome.second;
+                for(auto element:outcome.first)
+                {
+                    res.push_back({airport.second,element});
 
-            if (childOutcome.first > maxDepth) {
-                maxDepth = childOutcome.first;
-                farthestAirport = childOutcome.second;
+                }
+            }
+            else if(outcome.second == max)
+            {
+                for(auto element:outcome.first)
+                {
+                    res.push_back({airport.second,element});
+
+                }
             }
         }
     }
-
-    return {maxDepth, farthestAirport};
+    std::cout << "The maxium trip goes through "<< max <<  " airports" <<std::endl;
+    for(auto par: res)
+    {
+        std::cout << par.first->getName() << " ("<<par.first->getCode() << " )"<< " -> " << par.second->getName() << " ("<<par.second->getCode() << ")"<<std::endl;
+    }
 }
 
-*/
+std::pair<std::vector<Airport*>,int> Application::max_distance_bfs(Airport* source)
+{
+    for(auto airport: graph.getAirports()) airport.second->setProcessed(false);
+    std::queue<std::pair<Airport*,int>> q;
+    int max = 0;
+    std::vector<Airport*> airports;
+    q.push({source,0});
+    source->setProcessed(true);
+    while(!q.empty())
+    {
+        auto current = q.front();
+        q.pop();
+
+        for(auto flight: current.first->getFlights()){
+            if(!flight.getDest()->isProcessed())
+            {
+                q.push({flight.getDest(),current.second+1});
+                flight.getDest()->setProcessed(true);
+            }
+        }
+        if(current.second > max){
+            airports.clear();
+            airports.push_back(current.first);
+            max = current.second;
+        }
+
+        else if(current.second == max) airports.push_back(current.first);
+    }
+    return std::make_pair(airports,max);
+}
+
+void Application::bestFlightOption(std::string source, std::string dest) {
+    auto sourceAirport =  graph.findAirport(source);
+    auto destAirport = graph.findAirport(dest);
+
+
+}
+
+
