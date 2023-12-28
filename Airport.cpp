@@ -65,4 +65,20 @@ void Airport::setVisited(bool visited) {
     Airport::visited = visited;
 }
 
+int Airport::getNum() const {
+    return num;
+}
+
+void Airport::setNum(int num) {
+    Airport::num = num;
+}
+
+int Airport::getLow() const {
+    return low;
+}
+
+void Airport::setLow(int low) {
+    Airport::low = low;
+}
+
 

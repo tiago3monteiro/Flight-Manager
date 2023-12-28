@@ -25,12 +25,15 @@ public:
     void flightsPerAirline();
     void reachableDestinations( std::string airport,int n);
     void maximumTrip();
+    void essencialAirports(); //articulation points
+    void bestFlightOption(std::string source, std::string dest);
 
 private:
     std::set<Airport> airports;
     std::unordered_map<std::string ,Airline> airlines;
     Graph graph;
 
+    std::pair<int, Airport *> dfs_max(Airport *airport, int currentDepth);
 };
 
 

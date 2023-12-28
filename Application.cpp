@@ -8,6 +8,10 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <list>
+#include <stack>
+#include <climits>
+
 #include "Application.h"
 #include "Airport.h"
 #include "Flight.h"
@@ -279,7 +283,7 @@ void Application::reachableDestinations(std::string airport,int n)
                     q.push({flight.getDest(),current.second+1});
                     flight.getDest()->setVisited(true);
                 }
-           }
+            }
         }
     }
 
@@ -289,4 +293,114 @@ void Application::reachableDestinations(std::string airport,int n)
 
 
 }
-void Application::maximumTrip() {
+
+bool inStack(std::stack<Airport*>& s, Airport* airport) ;
+void dfs_essential(Graph graph, Airport* airport, std::set<Airport*>& res, std::stack<Airport*>& s, int index);
+
+void Application::essencialAirports() {
+    std::set<Airport*> res;
+    int index = 1;
+    std::stack<Airport*> s;
+
+    for (auto airport : graph.getAirports()) {
+        airport.second->setLow(0);
+        airport.second->setNum(0);
+        airport.second->setVisited(false);
+    }
+
+    for (auto airport : graph.getAirports()) {
+        if (!airport.second->getNum()) {
+            dfs_essential(graph, airport.second, res, s, index);
+        }
+    }
+
+    int i = 1;
+    for (auto airport : res) {
+        std::cout << i << " " << airport->getCode() << " ";
+        i++;
+    }
+    std::cout << std::endl << res.size();
+}
+
+
+
+void dfs_essential(Graph graph, Airport* airport, std::set<Airport*>& res, std::stack<Airport*>& s, int index) {
+    airport->setLow(index);
+    airport->setNum(index);
+    index++;
+    s.push(airport);
+    int children = 0;
+    bool isArticulation = false;
+
+    for (auto flight: airport->getFlights()) {
+        if (!flight.getDest()->getNum()) {
+            children++;
+            dfs_essential(graph, flight.getDest(), res, s, index);
+            airport->setLow(std::min(airport->getLow(), flight.getDest()->getLow()));
+
+            if (flight.getDest()->getLow() >= airport->getNum()) {
+                isArticulation = true;
+            }
+        }
+
+        else if (inStack(s, flight.getDest())) {
+            airport->setLow(std::min(airport->getLow(), flight.getDest()->getNum()));
+        }
+    }
+        if ((airport->getNum() == 1 && children > 1) || (airport->getNum() > 1 && isArticulation)) {
+            res.insert(airport);
+        }
+    s.pop();
+}
+
+
+bool inStack(std::stack<Airport*>& s, Airport* airport) {
+    std::stack<Airport*> tempStack;
+
+    while (!s.empty()) {
+        auto current = s.top();
+        s.pop();
+        tempStack.push(current);
+
+        if (current == airport) {
+            // Restore the original stack
+            while (!tempStack.empty()) {
+                s.push(tempStack.top());
+                tempStack.pop();
+            }
+            return true;
+        }
+    }
+
+    // Restore the original stack
+    while (!tempStack.empty()) {
+        s.push(tempStack.top());
+        tempStack.pop();
+    }
+
+    return false;
+}
+
+/*
+
+std::pair<int, Airport*> Application::dfs_max(Airport* airport, int currentDepth) {
+    airport->setVisited(true);
+
+    int maxDepth = currentDepth;
+    Airport* farthestAirport = airport;
+
+    for (Flight flight : airport->getFlights()) {
+        if (!flight.getDest()->isVisited()) {
+            auto childOutcome = dfs_max(flight.getDest(), currentDepth + 1);
+
+            if (childOutcome.first > maxDepth) {
+                maxDepth = childOutcome.first;
+                farthestAirport = childOutcome.second;
+            }
+        }
+    }
+
+    return {maxDepth, farthestAirport};
+}
+
+*/
