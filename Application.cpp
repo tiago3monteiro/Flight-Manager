@@ -150,7 +150,7 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
     std::map<std::string, std::vector<Airline>> trackAirlines;
 
     auto thisAirport = graph.findAirport(airport);
-    std::cout << "From " << thisAirport->getName() << " we have the following destinations done for the following airlines:"<<std::endl;
+    std::cout << "From " << thisAirport->getName() << " we have the following destinations done by the following airlines:"<<std::endl;
 
     for(auto flight:thisAirport->getFlights())
     {
