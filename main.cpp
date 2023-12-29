@@ -4,6 +4,7 @@
 
 int main() {
     Application app;
+
     int key = -1;
 
     while (key != 0) {
@@ -43,7 +44,6 @@ int main() {
                         case 3:
                             app.globalStatistics(3);
                             break;
-
                         case 0: {
                             key1 = 0;
                             break;
@@ -129,6 +129,7 @@ int main() {
                             if (subkey == 1) {
                                 std::cout << "Enter City Name: ";
                                 std::cin >> name;
+
                             } else if (subkey == 2) {
                                 std::cout << "Enter Airport Name: ";
                                 std::cin >> name;
@@ -175,7 +176,6 @@ int main() {
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "!......................................................!" << std::endl;
                     std::cin >> key3;
-
                     switch (key3) {
                         case 1: {
                             std::string airportName;
@@ -206,6 +206,7 @@ int main() {
                             std::cout << "|                    PLEASE ENTER K:                   |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> k;
+
                             app.greatestAirtraffic(k);
                             break;
                         }
@@ -216,6 +217,7 @@ int main() {
                             key3 = 0;
                             break;
                         }
+
                     }
                     break;
                 }
@@ -224,3 +226,4 @@ int main() {
         }
     }
 }
+
