@@ -1,61 +1,10 @@
 #include <iostream>
+#include "Application.h"
 #include <string>
 
-class Application {
-public:
-    // Global Network Statistics
-    void showTotalNumberOfAirports() {
-        // Logic to display the total number of airports
-    }
-
-    void showTotalNumberOfFlights() {
-        // Logic to display the total number of flights
-    }
-
-    // Detailed Flight Statistics
-    void showFlightsPerAirport(const std::string& airportName) {
-        // Logic to display flights per specified airport
-    }
-
-    void showFlightsPerCity(const std::string& cityName) {
-        // Logic to display flights per specified city
-    }
-
-    void showFlightsPerAirline(const std::string& airlineName) {
-        // Logic to display flights per specified airline
-    }
-
-    void showDistinctCountriesPerAirportOrCity(const std::string& name, bool isCity) {
-        // Logic to display distinct countries per airport or city
-    }
-
-    void showDestinationsPerAirport(const std::string& airportName) {
-        // Logic to display destinations per specified airport
-    }
-
-    // Advanced Analysis
-    void showReachableDestinations(const std::string& airportName, int stops) {
-        // Logic to display reachable destinations from a specified airport with a given number of stops
-    }
-
-    void showMaximumTripAndAirports() {
-        // Logic to display the maximum trip and corresponding airports
-    }
-
-    void showTopKAirports(int k) {
-        // Logic to display the top-K airports with the greatest air traffic
-    }
-
-    void showEssentialAirportsForNetwork() {
-        // Logic to display essential airports for network circulation
-    }
-
-    // Additional methods as required for other functionalities
-};
-
-
 int main() {
-    Application application;
+    Application app;
+
     int key = -1;
 
     while (key != 0) {
@@ -80,16 +29,20 @@ int main() {
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "|1. Total Number of Airports                           |" << std::endl;
                     std::cout << "|2. Total Number of Flights                            |" << std::endl;
-                    std::cout << "|0.Leave                                               |" << std::endl;
+                    std::cout << "|3. Total Number of Airlines                           |" << std::endl;
+                    std::cout << "|0. Leave                                               |" << std::endl;
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "¡......................................................¡" << std::endl;
                     std::cin >> key1;
                     switch (key1) {
                         case 1:
-                            application.showTotalNumberOfAirports();
+                            app.globalStatistics(1);
                             break;
                         case 2:
-                            application.showTotalNumberOfFlights();
+                            app.globalStatistics(2);
+                            break;
+                        case 3:
+                            app.globalStatistics(3);
                             break;
                         case 0: {
                             key1 = 0;
@@ -113,22 +66,20 @@ int main() {
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "|1. Flights Per Airport                                |" << std::endl;
                     std::cout << "|2. Flights Per City/Airline                           |" << std::endl;
-                    std::cout << "|3. Distinct Countries Per Airport/City                |" << std::endl;
-                    std::cout << "|4. Destinations Per Airport                           |" << std::endl;
                     std::cout << "|0. Leave                                              |" << std::endl;
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "¡......................................................¡" << std::endl;
                     std::cin >> key2;
                     switch (key2) {
                         case 1: {
-                            std::string airportName;
+                            std::string airportCode;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cout << "|                 Flights Per Airport                  |" << std::endl;
                             std::cout << "|                                                      |" << std::endl;
-                            std::cout << "|              PLEASE ENTER AIRPORT NAME:              |" << std::endl;
+                            std::cout << "|              PLEASE ENTER AIRPORT CODE:              |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
-                            std::cin >> airportName;
-                            application.showFlightsPerAirport(airportName);
+                            std::cin >> airportCode;
+                            app.flightsFromAirport(airportCode);
                             break;
                         }
                         case 2: {
@@ -136,8 +87,9 @@ int main() {
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cout << "|              Flights Per City/Airline                |" << std::endl;
                             std::cout << "|                                                      |" << std::endl;
-                            std::cout << "|1. Flights Per City                                   |" << std::endl;
-                            std::cout << "|2. Flights Per Airline                                |" << std::endl;
+                            std::cout << "|1. Flights Leaving Per City                           |" << std::endl;
+                            std::cout << "|2. Flights Arriving Per City                          |" << std::endl;
+                            std::cout << "|3. Flights Per Airline                                |" << std::endl;
                             std::cout << "|                                                      |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> subkey;
@@ -145,12 +97,21 @@ int main() {
                                 std::string cityName;
                                 std::cout << "Enter City Name: ";
                                 std::cin >> cityName;
-                                application.showFlightsPerCity(cityName);
-                            } else if (subkey == 2) {
+                                app.flightsLeavingPerCity(cityName);
+                            }
+                            else if (subkey == 2) {
+                                std::string cityName;
+                                std::cout << "Enter Airline Name: ";
+                                std::cin >> cityName;
+                                app.flightsArrivingPerCity(cityName);
+                            }
+
+                            else if (subkey == 3) {
                                 std::string airlineName;
                                 std::cout << "Enter Airline Name: ";
                                 std::cin >> airlineName;
-                                application.showFlightsPerAirline(airlineName);
+                                app.flightsPerAirline(airlineName);
+
                             }
                             break;
                         }
@@ -168,11 +129,10 @@ int main() {
                             if (subkey == 1) {
                                 std::cout << "Enter City Name: ";
                                 std::cin >> name;
-                                application.showDistinctCountriesPerAirportOrCity(name, true);
+
                             } else if (subkey == 2) {
                                 std::cout << "Enter Airport Name: ";
                                 std::cin >> name;
-                                application.showDistinctCountriesPerAirportOrCity(name, false);
                             }
                             break;
                         }
@@ -184,7 +144,6 @@ int main() {
                             std::cout << "|              PLEASE ENTER AIRPORT NAME:              |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> airportName;
-                            application.showDestinationsPerAirport(airportName);
                             break;
                         }
 
@@ -233,11 +192,11 @@ int main() {
                             std::cout << "|                    PLEASE ENTER X:                   |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> stops;
-                            application.showReachableDestinations(airportName, stops);
+                            app.reachableDestinations(airportName,stops);
                             break;
                         }
                         case 2:
-                            application.showMaximumTripAndAirports();
+                            app.maximumTrip();
                             break;
                         case 3: {
                             int k;
@@ -247,24 +206,24 @@ int main() {
                             std::cout << "|                    PLEASE ENTER K:                   |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> k;
-                            application.showTopKAirports(k);
+
+                            app.greatestAirtraffic(k);
                             break;
                         }
                         case 4:
-                            application.showEssentialAirportsForNetwork();
+                            app.essencialAirports();
                             break;
                         case 0: {
                             key3 = 0;
                             break;
                         }
+
+                    }
+                    break;
                 }
-                break;
-            }
-            default: {
-                std::cout << "¡....................................¡" << std::endl;
-                std::cout << "|     Please insert a valid key!     |" << std::endl;
-                std::cout << "!....................................!" << std::endl;
-                break;
+
             }
         }
     }
+}
+

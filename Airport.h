@@ -29,6 +29,16 @@ public:
     void addFlight(Flight flight); //add edges
     bool isVisited() const;
     void setVisited(bool visited);
+    int getNum() const;
+    void setNum(int num);
+    int getLow() const;
+    void setLow(int low);
+    int getInbound() const;
+    void setInbound(int inbound);
+    int getOutbound() const;
+    void setOutbound(int outbound);
+    void setProcessed(bool processed);
+    bool isProcessed() const;
 
 private:
     std::string code;
@@ -39,6 +49,11 @@ private:
     float lat;
     float lon;
     bool visited;
+    bool processed;
+    int num;
+    int low;
+    int inbound;
+    int outbound;
 
 };
 

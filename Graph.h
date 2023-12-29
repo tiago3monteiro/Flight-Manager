@@ -18,6 +18,8 @@ public:
     Airport* findAirport(std::string code);
     bool addFlight(Airport* source, Airport* dest ,Airline airline);
     const std::unordered_map<std::string, Airport *> &getAirports() const;
+    std::vector<Airport *> bfs(Airport* source);
+    std::set<Airport*>dfs();
 
 private:
     std::unordered_map<std::string,Airport*> airports; //airportsSet; // vertex set

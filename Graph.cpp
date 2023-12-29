@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <queue>
 #include "Graph.h"
 
 Graph::Graph() {}
@@ -40,4 +41,29 @@ bool Graph::addFlight(Airport* source, Airport* dest, Airline airline) {
 
 const std::unordered_map<std::string, Airport *> &Graph::getAirports() const {
     return airports;
+}
+
+std::vector<Airport *> Graph::bfs(Airport* source) {
+    std::vector<Airport*> res;
+    std::queue<Airport*> q;
+
+    for (auto anAirport : this->getAirports()) anAirport.second->setVisited(false);
+    source->setVisited(true);
+
+    q.push(source);
+    while (!q.empty()) {
+        auto currentAirport = q.front();
+        q.pop();
+        for (auto flight : currentAirport->getFlights())
+        {
+            if (!flight.getDest()->isVisited())
+            {
+                flight.getDest()->setVisited(true);
+                q.push(flight.getDest());
+                res.push_back(flight.getDest());
+            }
+        }
+    }
+
+    return res;
 }
