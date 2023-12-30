@@ -11,10 +11,9 @@
 #include <list>
 #include <stack>
 #include <climits>
-
+#include <limits>
 #include "Application.h"
 #include "Airport.h"
-#include "Flight.h"
 
 Application::Application()
 {
@@ -51,6 +50,9 @@ Application::Application()
 
         Airport airport(lista[0], lista[1], lista[2], lista[3], latitude, longitude);
         airports.insert(airport);
+        auto it = cityMap.find(airport.getCity());
+        if(it != cityMap.end()) it->second.push_back(airport.getCode());
+        else cityMap[airport.getCity()] = {airport.getCode()};
         graph.addAirport(airport);
     }
 
@@ -498,11 +500,105 @@ std::pair<std::vector<Airport*>,int> Application::max_distance_bfs(Airport* sour
     return std::make_pair(airports,max);
 }
 
-void Application::bestFlightOption(std::string source, std::string dest) {
-    auto sourceAirport =  graph.findAirport(source);
-    auto destAirport = graph.findAirport(dest);
+void Application::bestFlightOption(std::pair<std::string, int> source, std::pair<std::string, int> dest) {
 
+    std::vector<Airport *> origin;
+    std::vector<Airport *> destination;
 
+    if (source.second == 1) origin.push_back(graph.findAirport(source.first)); //Airport Code
+
+    else if (source.second == 2) // CITY
+        for (auto airport : cityMap[source.first])
+            origin.push_back(graph.findAirport(airport));
+    else {
+
+        auto lowest = std::numeric_limits<float>::max();
+        for (auto airport : graph.getAirports())
+        {
+            auto distance = airport.second->distanceToPoint(source.first);
+            if (distance < lowest) {
+                origin.clear();
+                origin.push_back(graph.findAirport(airport.first));
+                lowest = distance;
+                if (lowest == 0) break;  // Avoid further checks if distance is zero
+            }
+            else if (distance == lowest) origin.push_back(graph.findAirport(airport.first));
+        }
+    }
+
+    if (dest.second == 1) destination.push_back(graph.findAirport(dest.first)); //Airport
+
+    else if (dest.second == 2) //CITY
+        for (auto airport : cityMap[dest.first])
+            destination.push_back(graph.findAirport(airport));
+    else
+    {
+        auto lowest = std::numeric_limits<float>::max();
+        for (auto airport : graph.getAirports()) {
+
+            auto distance = airport.second->distanceToPoint(dest.first);
+            if (distance < lowest)
+            {
+                destination.clear();
+                destination.push_back(graph.findAirport(airport.first));
+                lowest = distance;
+                if (lowest == 0) break;  // Avoid further checks if distance is zero
+            }
+            else if (distance == lowest) destination.push_back(graph.findAirport(airport.first));
+        }
+    }
+
+    for (auto &airport : graph.getAirports()) {
+        airport.second->setVisited(false);
+        airport.second->setStopCount(INT_MAX);
+    }
+
+    std::queue<std::pair<Airport *, std::vector<Airport *>>> q;
+
+    // Initialize the queue with each origin airport and its corresponding route
+    for (auto &startAirport : origin) {
+        std::vector<Airport *> startRoute = {startAirport};
+        q.push({startAirport, startRoute});
+        startAirport->setVisited(true);
+        startAirport->setStopCount(0);
+    }
+
+    std::vector<std::vector<Airport *>> allRoutes;
+
+    while (!q.empty()) {
+        auto current = q.front();
+        q.pop();
+        Airport *currentAirport = current.first;
+        std::vector<Airport *> currentRoute = current.second;
+
+        for (auto flight : currentAirport->getFlights()) {
+            if (!flight.getDest()->isVisited()) {
+                flight.getDest()->setVisited(true);
+                flight.getDest()->setStopCount(currentAirport->getStopCount() + 1);
+
+                std::vector<Airport *> newRoute = currentRoute;
+                newRoute.push_back(flight.getDest());
+
+                q.push({flight.getDest(), newRoute});
+
+                if (std::find(destination.begin(), destination.end(), flight.getDest()) != destination.end()) {
+                    // Check if the destination airport is reached
+                    allRoutes.push_back(newRoute);
+                }
+            }
+        }
+    }
+
+    std::cout << "Minimum stops to reach destination: " << destination[0]->getStopCount() << std::endl;
+    std::cout << "All routes with minimum stops:" << std::endl;
+    for (auto &route : allRoutes) {
+        size_t routeSize = route.size();
+        for (size_t i = 0; i < routeSize; ++i) {
+            std::cout << route[i]->getName() << "(" << route[i]->getCode() << ")";
+            if (i < routeSize - 1) {
+                std::cout << " -> ";
+            }
+        }
+        std::cout << std::endl;
+    }
 }
-
-

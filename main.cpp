@@ -5,6 +5,9 @@
 int main() {
     Application app;
 
+
+    app.bestFlightOption({"-35,149",3},{"39,-94",3});
+
     int key = -1;
 
     while (key != 0) {

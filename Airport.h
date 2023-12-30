@@ -39,7 +39,9 @@ public:
     void setOutbound(int outbound);
     void setProcessed(bool processed);
     bool isProcessed() const;
-
+    int getStopCount() const;
+    void setStopCount(int stopCount);
+    float distanceToPoint(std::string point);
 private:
     std::string code;
     std::string name;
@@ -54,6 +56,7 @@ private:
     int low;
     int inbound;
     int outbound;
+    int stopCount;
 
 };
 
