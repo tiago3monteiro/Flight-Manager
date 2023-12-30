@@ -2,6 +2,7 @@
 // Created by tiagomonteiro on 12/20/23.
 //
 
+#include <complex>
 #include "Airport.h"
 
 Airport::Airport() = default;
@@ -105,4 +106,37 @@ void Airport::setProcessed(bool processed) {
     this->processed = processed;
 }
 
+int Airport::getStopCount() const {
+    return stopCount;
+}
 
+void Airport::setStopCount(int stopCount) {
+    Airport::stopCount = stopCount;
+}
+
+float Airport::distanceToPoint(std::string point) {
+    auto commaPos = point.find(',');
+    auto x = point.substr(0, commaPos);
+    auto y = point.substr(commaPos + 1);
+    auto destLat = std::stof(x);
+    auto destLon = std::stof(y);
+
+    // Helper function to convert degrees to radians
+    auto toRadians = [](float degrees) {
+        return degrees * (M_PI / 180.0);
+    };
+
+    // Calculate differences in coordinates
+    auto dLat = toRadians(destLat - this->getLat());
+    auto dLon = toRadians(destLon - this->getLon());
+
+    // Haversine formula
+    auto a = std::sin(dLat / 2) * std::sin(dLat / 2) +
+             std::cos(toRadians(this->getLat())) * std::cos(toRadians(destLat)) *
+             std::sin(dLon / 2) * std::sin(dLon / 2);
+    auto c = 2 * std::atan2(std::sqrt(a), std::sqrt(1 - a));
+
+    // Calculate distance in kilometers
+    const float EarthRadiusKm = 6371.0f; // Earth's radius in kilometers
+    return EarthRadiusKm * c;
+}

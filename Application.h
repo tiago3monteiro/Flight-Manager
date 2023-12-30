@@ -27,12 +27,13 @@ public:
     void maximumTrip();
     std::pair<std::vector<Airport*>,int> max_distance_bfs(Airport* source);
     void essencialAirports(); //articulation points
-    void bestFlightOption(std::string source, std::string dest);
+    void bestFlightOption(std::pair<std::string ,int>source, std::pair<std::string ,int>dest);
 
 private:
     std::set<Airport> airports;
     std::unordered_map<std::string ,Airline> airlines;
     Graph graph;
+    std::unordered_map<std::string,std::vector<std::string>> cityMap;
 
 };
 
