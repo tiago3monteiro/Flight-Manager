@@ -11,7 +11,7 @@
 #include "Flight.h"
 
 class Flight;
-
+class Airline;
 class Airport {
 
 public:
@@ -42,6 +42,8 @@ public:
     int getStopCount() const;
     void setStopCount(int stopCount);
     float distanceToPoint(std::string point);
+    std::vector<Airline> getFlightsTo(Airport *&pAirport);
+
 private:
     std::string code;
     std::string name;

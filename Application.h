@@ -26,8 +26,10 @@ public:
     void greatestAirtraffic(int k);
     void maximumTrip();
     std::pair<std::vector<Airport*>,int> max_distance_bfs(Airport* source);
-    void essencialAirports(); //articulation points
+    void essencialAirports();
     void bestFlightOption(std::pair<std::string ,int>source, std::pair<std::string ,int>dest);
+    void bestFlightOptionAirline(std::pair<std::string ,int>source, std::pair<std::string ,int>dest, std::vector<std::string> airlines);
+
 
 private:
     std::set<Airport> airports;

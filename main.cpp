@@ -5,8 +5,8 @@
 int main() {
     Application app;
 
-
-    app.bestFlightOption({"-35,149",3},{"39,-94",3});
+    app.bestFlightOptionAirline({"Porto",2},{"Malta",2},{"TAP"});
+    //app.bestFlightOption({"New York",2},{"HKG",1});
 
     int key = -1;
 
@@ -17,6 +17,7 @@ int main() {
         std::cout << "|1. Global Network Statistics                          |" << std::endl;
         std::cout << "|2. Detailed Flight Statistics                         |" << std::endl;
         std::cout << "|3. Advanced Analysis                                  |" << std::endl;
+        std::cout << "|4. Best Flight Option                                 |" << std::endl;
         std::cout << "|0. Exit                                               |" << std::endl;
         std::cout << "|                                                      |" << std::endl;
         std::cout << "!......................................................!" << std::endl;
@@ -224,6 +225,20 @@ int main() {
                     }
                     break;
                 }
+
+            }
+            case 4:
+            {
+                int key4 = -1;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cout << "|                  Best Flight                         |" << std::endl;
+                std::cout << "|                                                      |" << std::endl;
+                std::cout << "|1. No filter                                          |" << std::endl;
+                std::cout << "|2. Choose Airlines                                    |" << std::endl;
+                std::cout << "|3. Less Airlines                                      |" << std::endl;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cin >> key4;
+
 
             }
         }
