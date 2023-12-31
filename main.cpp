@@ -5,8 +5,8 @@
 int main() {
     Application app;
 
-    app.bestFlightOptionAirline({"Porto",2},{"Malta",2},{"TAP"});
-    //app.bestFlightOption({"New York",2},{"HKG",1});
+    app.bestFlightOptionAirline({"Porto",2},{"Malta",2},{"RYR"});
+    app.bestFlightOption({"Porto",2},{"Malta",2});
 
     int key = -1;
 

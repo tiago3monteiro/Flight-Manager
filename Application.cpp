@@ -733,8 +733,8 @@ void Application::bestFlightOptionAirline(std::pair<std::string, int> source, st
         std::cout << "Minimum stops to reach destination: " << minStops << std::endl;
         std::cout << "All routes with minimum stops:" << std::endl;
         for (auto &route : allRoutes) {
-            size_t routeSize = route.size();
-            for (size_t i = 0; i < routeSize; ++i) {
+            auto routeSize = route.size();
+            for (auto i = 0; i < routeSize; ++i) {
                 std::cout << route[i]->getName() << "(" << route[i]->getCode() << ")";
                 if (i < routeSize - 1)
                 {
