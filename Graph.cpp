@@ -19,6 +19,10 @@ void Graph::addAirport(Airport airport){
 
 }
 
+/**
+ * Function that finds out the vertex of a graph, this means the airport in the set of airports
+ * Time Complexity: O(1)
+ **/
 Airport* Graph::findAirport(std::string code)
 {
     auto it = airports.find(code);
@@ -43,27 +47,3 @@ const std::unordered_map<std::string, Airport *> &Graph::getAirports() const {
     return airports;
 }
 
-std::vector<Airport *> Graph::bfs(Airport* source) {
-    std::vector<Airport*> res;
-    std::queue<Airport*> q;
-
-    for (auto anAirport : this->getAirports()) anAirport.second->setVisited(false);
-    source->setVisited(true);
-
-    q.push(source);
-    while (!q.empty()) {
-        auto currentAirport = q.front();
-        q.pop();
-        for (auto flight : currentAirport->getFlights())
-        {
-            if (!flight.getDest()->isVisited())
-            {
-                flight.getDest()->setVisited(true);
-                q.push(flight.getDest());
-                res.push_back(flight.getDest());
-            }
-        }
-    }
-
-    return res;
-}
