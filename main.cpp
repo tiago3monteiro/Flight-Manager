@@ -4,12 +4,7 @@
 
 int main() {
     Application app;
-
-    app.bestFlightOptionAirline({"Porto",2},{"Malta",2},{"RYR"});
-    app.bestFlightOption({"Porto",2},{"Malta",2});
-
     int key = -1;
-
     while (key != 0) {
         std::cout << "¡......................................................¡" << std::endl;
         std::cout << "|            Flight Management System Menu             |" << std::endl;
@@ -34,7 +29,7 @@ int main() {
                     std::cout << "|1. Total Number of Airports                           |" << std::endl;
                     std::cout << "|2. Total Number of Flights                            |" << std::endl;
                     std::cout << "|3. Total Number of Airlines                           |" << std::endl;
-                    std::cout << "|0. Leave                                               |" << std::endl;
+                    std::cout << "|0. Leave                                              |" << std::endl;
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "¡......................................................¡" << std::endl;
                     std::cin >> key1;
@@ -53,16 +48,18 @@ int main() {
                             break;
                         }
                         default: {
-                            std::cout << "¡....................................¡" << std::endl;
-                            std::cout << "|     Please insert a valid key!     |" << std::endl;
-                            std::cout << "!....................................!" << std::endl;
+                            std::cout << "¡......................................................¡"<< std::endl;
+                            std::cout << "|                 NOT A VALID KEY                      |"<< std::endl;
+                            std::cout << "¡......................................................¡"<< std::endl;
                             break;
                         }
                     }
                 }
                 break;
             }
-            case 2: {
+
+            case 2:
+            {
                 int key2 = -1;
                 while (key2 != 0) {
                     std::cout << "¡......................................................¡" << std::endl;
@@ -75,79 +72,90 @@ int main() {
                     std::cout << "¡......................................................¡" << std::endl;
                     std::cin >> key2;
                     switch (key2) {
-                        case 1: {
+
+                        case 1:
+                        {
                             std::string airportCode;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cout << "|                 Flights Per Airport                  |" << std::endl;
                             std::cout << "|                                                      |" << std::endl;
-                            std::cout << "|              PLEASE ENTER AIRPORT CODE:              |" << std::endl;
+                            std::cout << "|              PLEASE ENTER AIRPORT :                  |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> airportCode;
-                            app.flightsFromAirport(airportCode);
-                            break;
-                        }
-                        case 2: {
-                            int subkey;
-                            std::cout << "¡......................................................¡" << std::endl;
-                            std::cout << "|              Flights Per City/Airline                |" << std::endl;
-                            std::cout << "|                                                      |" << std::endl;
-                            std::cout << "|1. Flights Leaving Per City                           |" << std::endl;
-                            std::cout << "|2. Flights Arriving Per City                          |" << std::endl;
-                            std::cout << "|3. Flights Per Airline                                |" << std::endl;
-                            std::cout << "|                                                      |" << std::endl;
-                            std::cout << "¡......................................................¡" << std::endl;
-                            std::cin >> subkey;
-                            if (subkey == 1) {
-                                std::string cityName;
-                                std::cout << "Enter City Name: ";
-                                std::cin >> cityName;
-                                app.flightsLeavingPerCity(cityName);
-                            }
-                            else if (subkey == 2) {
-                                std::string cityName;
-                                std::cout << "Enter Airline Name: ";
-                                std::cin >> cityName;
-                                app.flightsArrivingPerCity(cityName);
-                            }
+                            if(app.validateData(airportCode))app.flightsFromAirport(airportCode);
 
-                            else if (subkey == 3) {
-                                std::string airlineName;
-                                std::cout << "Enter Airline Name: ";
-                                std::cin >> airlineName;
-                                app.flightsPerAirline(airlineName);
+                            else
+                            {
+                                std::cout << "¡......................................................¡" << std::endl;
+                                std::cout << "|                 NOT A VALID AIRPORT                  |" << std::endl;
+                                std::cout << "¡......................................................¡" << std::endl;
 
                             }
                             break;
                         }
-                        case 3: {
-                            int subkey;
-                            std::cout << "¡......................................................¡" << std::endl;
-                            std::cout << "|         Distinct Countries Per Airport/City          |" << std::endl;
-                            std::cout << "|                                                      |" << std::endl;
-                            std::cout << "|1. Distinct Countries Per City                        |" << std::endl;
-                            std::cout << "|2. Distinct Countries Per Airline                     |" << std::endl;
-                            std::cout << "|                                                      |" << std::endl;
-                            std::cout << "¡......................................................¡" << std::endl;
-                            std::cin >> subkey;
-                            std::string name;
-                            if (subkey == 1) {
-                                std::cout << "Enter City Name: ";
-                                std::cin >> name;
 
-                            } else if (subkey == 2) {
-                                std::cout << "Enter Airport Name: ";
-                                std::cin >> name;
+                        case 2:
+                        {
+                            int subkey = -1;
+                            while(subkey != 0)
+                            {
+                                std::cout << "¡......................................................¡" << std::endl;
+                                std::cout << "|              Flights Per City/Airline                |" << std::endl;
+                                std::cout << "|                                                      |" << std::endl;
+                                std::cout << "|1. Flights Leaving Per City                           |" << std::endl;
+                                std::cout << "|2. Flights Arriving Per City                          |" << std::endl;
+                                std::cout << "|3. Flights Per Airline                                |" << std::endl;
+                                std::cout << "|0. Leave                                              |" << std::endl;
+                                std::cout << "|                                                      |" << std::endl;
+                                std::cout << "¡......................................................¡" << std::endl;
+                                std::cin >> subkey;
+
+                                if (subkey == 1)
+                                {
+                                    std::string cityName;
+                                    std::cout << "Enter City Name: ";
+                                    std::cin >> cityName;
+                                    if (app.validateData(cityName))app.flightsLeavingPerCity(cityName);
+                                    else {
+                                        std::cout << "¡......................................................¡"<< std::endl;
+                                        std::cout << "|                 NOT A VALID CITY                     |"<< std::endl;
+                                        std::cout << "¡......................................................¡"<< std::endl;
+                                    }
+                                }
+
+                                else if (subkey == 2) {
+                                    std::string cityName;
+                                    std::cout << "Enter Airline Name: ";
+                                    std::cin >> cityName;
+                                    if (app.validateData(cityName))
+                                    {
+                                        app.flightsArrivingPerCity(cityName);
+                                        break;
+                                    }
+                                    else {
+                                        std::cout << "¡......................................................¡"<< std::endl;
+                                        std::cout << "|                 NOT A VALID CITY                     |"<< std::endl;
+                                        std::cout << "¡......................................................¡"<< std::endl;
+                                    }
+                                }
+
+                                else if (subkey == 3) {
+                                    std::string airlineName;
+                                    std::cout << "Enter Airline Name: ";
+                                    std::cin >> airlineName;
+                                    if (app.validateData(airlineName)) {
+                                        app.flightsPerAirline(airlineName);
+                                        break;
+                                    }
+                                }
+                                else if (subkey == 0)  break;
+                                else
+                                {
+                                    std::cout << "¡......................................................¡"<< std::endl;
+                                    std::cout << "|                 NOT A VALID KEY                      |"<< std::endl;
+                                    std::cout << "¡......................................................¡"<< std::endl;
+                                }
                             }
-                            break;
-                        }
-                        case 4: {
-                            std::string airportName;
-                            std::cout << "¡......................................................¡" << std::endl;
-                            std::cout << "|              Destinations Per Airport                |" << std::endl;
-                            std::cout << "|                                                      |" << std::endl;
-                            std::cout << "|              PLEASE ENTER AIRPORT NAME:              |" << std::endl;
-                            std::cout << "¡......................................................¡" << std::endl;
-                            std::cin >> airportName;
                             break;
                         }
 
@@ -157,18 +165,20 @@ int main() {
                         }
 
                         default: {
-                            std::cout << "¡....................................¡" << std::endl;
-                            std::cout << "|     Please insert a valid key!     |" << std::endl;
-                            std::cout << "!....................................!" << std::endl;
+                            std::cout << "¡......................................................¡"<< std::endl;
+                            std::cout << "|                 NOT A VALID KEY                      |"<< std::endl;
+                            std::cout << "¡......................................................¡"<< std::endl;
                             break;
                         }
                     }
                 }
                 break;
             }
+
             case 3: {
                 int key3 = -1;
-                while (key3 != 0) {
+                while (key3 != 0)
+                {
                     std::cout << "¡......................................................¡" << std::endl;
                     std::cout << "|                  Advanced Analysis                   |" << std::endl;
                     std::cout << "|                                                      |" << std::endl;
@@ -180,6 +190,7 @@ int main() {
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "!......................................................!" << std::endl;
                     std::cin >> key3;
+
                     switch (key3) {
                         case 1: {
                             std::string airportName;
@@ -196,7 +207,13 @@ int main() {
                             std::cout << "|                    PLEASE ENTER X:                   |" << std::endl;
                             std::cout << "¡......................................................¡" << std::endl;
                             std::cin >> stops;
-                            app.reachableDestinations(airportName,stops);
+                            if(app.validateData(airportName))app.reachableDestinations(airportName,stops);
+                            else
+                            {
+                                std::cout << "¡......................................................¡" << std::endl;
+                                std::cout << "|                 NOT A VALID AIRPORT                  |" << std::endl;
+                                std::cout << "¡......................................................¡" << std::endl;
+                            }
                             break;
                         }
                         case 2:
@@ -215,20 +232,61 @@ int main() {
                             break;
                         }
                         case 4:
+                        {
                             app.essencialAirports();
                             break;
+                        }
+
                         case 0: {
                             key3 = 0;
+                            break;
+                        }
+                        default:
+                        {
+                            std::cout << "¡......................................................¡"<< std::endl;
+                            std::cout << "|                 NOT A VALID KEY                      |"<< std::endl;
+                            std::cout << "¡......................................................¡"<< std::endl;
                             break;
                         }
 
                     }
                     break;
                 }
+                break;
 
             }
+
             case 4:
             {
+                int sourceType = -1;
+                std::string source;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cout << "|                  Type of source:                     |" << std::endl;
+                std::cout << "|                                                      |" << std::endl;
+                std::cout << "|1. Airport                                            |" << std::endl;
+                std::cout << "|2. City                                               |" << std::endl;
+                std::cout << "|3. Geographical coordinates                           |" << std::endl;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cin >> sourceType;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cout << "|               INSERT THE SOURCE :                    |" << std::endl;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cin >> source;
+
+                int destType = -1;
+                std::string dest;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cout << "|                  Type of destination:                |" << std::endl;
+                std::cout << "|                                                      |" << std::endl;
+                std::cout << "|1. Airport                                            |" << std::endl;
+                std::cout << "|2. City                                               |" << std::endl;
+                std::cout << "|3. Geographical coordinates                           |" << std::endl;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cin >> destType;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cout << "|               INSERT THE DESTINATION :               |" << std::endl;
+                std::cout << "¡......................................................¡" << std::endl;
+                std::cin >> dest;
                 int key4 = -1;
                 std::cout << "¡......................................................¡" << std::endl;
                 std::cout << "|                  Best Flight                         |" << std::endl;
@@ -239,6 +297,55 @@ int main() {
                 std::cout << "¡......................................................¡" << std::endl;
                 std::cin >> key4;
 
+                switch (key4)
+                {
+                    case 1:
+                    {
+                        if(destType>0&&destType<4 && sourceType>0 && sourceType<4)
+                            if(app.validateData(source)&&app.validateData(dest))
+                                app.bestFlightOption({source,sourceType},{dest,destType});
+
+                        break;
+
+                    }
+
+                    case 2:
+                    {
+                        int airlineCount = 0;
+                        std::cout << "¡......................................................¡" << std::endl;
+                        std::cout << "|               INSERT NUMBER OF AIRLINES :            |" << std::endl;
+                        std::cout << "¡......................................................¡" << std::endl;
+                        std::cin >> airlineCount;
+                        std::vector<std::string> res;
+                        std::string airline;
+                        int count = 0;
+                        while(count < airlineCount)
+                        {
+                            std::cout << "¡......................................................¡" << std::endl;
+                            std::cout << "|               INSERT AIRLINE :                      |" << std::endl;
+                            std::cout << "¡......................................................¡" << std::endl;
+                            std::cin >> airline;
+                            res.push_back(airline);
+                            count++;
+                        }
+                        if(destType>0&&destType<4 && sourceType>0 && sourceType<4)
+                            if(app.validateData(source)&&app.validateData(dest))
+                                app.bestFlightOptionAirline({source,sourceType},{dest,destType},res);
+                    }
+                    case 3:
+                    {
+                        //add later
+
+                    }
+
+                    default:
+                    {
+                        std::cout << "¡......................................................¡"<< std::endl;
+                        std::cout << "|                 NOT A VALID KEY                      |"<< std::endl;
+                        std::cout << "¡......................................................¡"<< std::endl;
+                        break;
+                    }
+                }
 
             }
         }

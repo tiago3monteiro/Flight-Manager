@@ -150,6 +150,11 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
     std::set<std::string> differentCountries;
     int count = 0;
     std::map<std::string, std::vector<Airline>> trackAirlines;
+    if(airport.size() != 3) //if we get the name and not the code
+    {
+        for(auto dAirport: airports)
+            if(dAirport.getName() == airport) airport = dAirport.getCode();
+    }
 
     auto thisAirport = graph.findAirport(airport);
     std::cout << "From " << thisAirport->getName() << " we have the following destinations done by the following airlines:"<<std::endl;
@@ -267,6 +272,9 @@ void Application::flightsArrivingPerCity(std::string City)
 void Application::flightsPerAirline(std::string airlineName)
 {
     std::map<std::string, int> cityFlightCount;
+    if(airlineName.size() == 3)
+        airlineName = airlines[airlineName].getName();
+
 
     for (auto airport : graph.getAirports())
     {
@@ -304,6 +312,11 @@ void Application::reachableDestinations(std::string airport,int n)
     std::set<std::string> differentAirports;
     std::set<std::string> differentCountries;
     std::set<std::string> differentCities;
+    if(airport.size() != 3)
+    {
+        for(auto dAirpot:airports)
+            if(dAirpot.getName() == airport) airport = dAirpot.getCode();
+    }
     for(auto airport: graph.getAirports()) airport.second->setVisited(false);
     auto source = graph.findAirport(airport);
     std::queue<std::pair<Airport*,int>> q;
@@ -505,7 +518,15 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
     std::vector<Airport *> destination;
 
     if (source.second == 1)
+    {
+        if(source.first.size() != 3)
+        {
+            for(auto airport:airports) if(airport.getName() == source.first) source.first = airport.getCode();
+        }
+
         origin.push_back(graph.findAirport(source.first)); //Airport Code
+    }
+
     else if (source.second == 2) // CITY
         for (auto airport : cityMap[source.first])
             origin.push_back(graph.findAirport(airport));
@@ -524,7 +545,14 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
     }
 
     if (dest.second == 1)
+    {
+        if(dest.first.size() != 3)
+        {
+            for(auto airport:airports) if(airport.getName() == dest.first) dest.first = airport.getCode();
+        }
         destination.push_back(graph.findAirport(dest.first)); //Airport
+    }
+
     else if (dest.second == 2) //CITY
         for (auto airport : cityMap[dest.first])
             destination.push_back(graph.findAirport(airport));
@@ -614,7 +642,14 @@ void Application::bestFlightOptionAirline(std::pair<std::string, int> source, st
     for (auto airline : chosenAirlines) availableAirlines.insert(airlines[airline]);
 
     if (source.second == 1)
-        origin.push_back(graph.findAirport(source.first)); // Airport Code
+    {
+        if(source.first.size() != 3)
+        {
+            for(auto airport:airports) if(airport.getName() == source.first) source.first = airport.getCode();
+        }
+        origin.push_back(graph.findAirport(source.first)); //Airport Code
+    }
+
     else if (source.second == 2) // CITY
         for (auto airport : cityMap[source.first])
             origin.push_back(graph.findAirport(airport));
@@ -634,11 +669,19 @@ void Application::bestFlightOptionAirline(std::pair<std::string, int> source, st
         }
     }
 
-    if (dest.second == 1) destination.push_back(graph.findAirport(dest.first)); // Airport
+    if (dest.second == 1)
+    {
+        if(dest.first.size() != 3)
+        {
+            for(auto airport:airports) if(airport.getName() == dest.first) dest.first = airport.getCode();
+        }
+        destination.push_back(graph.findAirport(dest.first)); //Airport
+    }
 
     else if (dest.second == 2) // CITY
         for (auto airport : cityMap[dest.first])
             destination.push_back(graph.findAirport(airport));
+
     else
     {
         auto lowest = std::numeric_limits<float>::max();
@@ -655,7 +698,7 @@ void Application::bestFlightOptionAirline(std::pair<std::string, int> source, st
             else if (distance == lowest) destination.push_back(graph.findAirport(airport.first));
         }
     }
-
+    std::cout << origin.front()->getCode()<<std::endl;
     for (auto &airport : graph.getAirports()) {
         airport.second->setVisited(false);
         airport.second->setStopCount(INT_MAX);
@@ -750,3 +793,18 @@ void Application::bestFlightOptionAirline(std::pair<std::string, int> source, st
         }
     }
 }
+
+bool Application::validateData(std::string data) {
+
+    auto it = airlines.find(data);
+    if(it != airlines.end()) return true; //found airline by code
+    auto it2 = cityMap.find(data);
+    if(it2 != cityMap.end()) return true; //found city
+    for(auto aiport: airports) //found airport name or code
+        if(aiport.getName() == data || aiport.getCode() == data) return true;
+    for(auto airline: airlines) //airline by name
+        if(airline.second.getName() == data) return true;
+
+    return false;
+}
+
