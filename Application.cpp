@@ -15,6 +15,10 @@
 #include "Application.h"
 #include "Airport.h"
 
+/**
+ * Class Constructor reads and parses data
+ * Time Complexity:O(nlog(n))
+ **/
 Application::Application()
 {
     std::ifstream in("airports.csv");
@@ -103,9 +107,11 @@ Application::Application()
         }
     }
 
-    std::cout << "parse done"<<std::endl;
 }
-
+/**
+ *  Function that finds out the number of flights, airlines and airports.
+ * Time complexity: O(|V| + |E|), |V| - number of vertices in the graph (airports), |E| - number of edges in the graph (flights)
+ **/
 
 void Application::globalStatistics(int key)
 {
@@ -140,10 +146,14 @@ void Application::globalStatistics(int key)
     if(key==1)std::cout << "Global number of airports: "<< airports.size() <<std::endl;
     if(key==2)std::cout << "Global number of flights: "<< count_flights <<std::endl;
     if(key==3)std::cout << "Global number of airlines: " << airlines.size() << std::endl;
-
 }
+/**
+ * Function that finds out the available flights from an airport and some useful related information like different,
+ * airports and countries.
+ * Time Complexity: O(|V|+|E|)
+ **/
 
-void Application::flightsFromAirport(std::string airport) //expand later to get more particular data, maybe?
+void Application::flightsFromAirport(std::string airport)
 {
     std::set<std::string> differentAirlines;
     std::set<std::string> differentCities;
@@ -152,8 +162,7 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
     std::map<std::string, std::vector<Airline>> trackAirlines;
     if(airport.size() != 3) //if we get the name and not the code
     {
-        for(auto dAirport: airports)
-            if(dAirport.getName() == airport) airport = dAirport.getCode();
+        for(auto dAirport: airports) if(dAirport.getName() == airport) airport = dAirport.getCode();
     }
 
     auto thisAirport = graph.findAirport(airport);
@@ -194,6 +203,11 @@ void Application::flightsFromAirport(std::string airport) //expand later to get 
 
 }
 
+/**
+ * Function that finds out the number o flights leaving one city
+ * Time Complexity: O(|V|+|E|)
+ **/
+
 void Application::flightsLeavingPerCity(std::string cityName)
 {
     std::map<std::string, int> cityFlightCount;
@@ -233,6 +247,10 @@ void Application::flightsLeavingPerCity(std::string cityName)
     }
 }
 
+/**
+ * Function that finds out the number o flights arriving in one city
+ * Time Complexity: O(|V|+|E|)
+ **/
 
 void Application::flightsArrivingPerCity(std::string City)
 {
@@ -260,14 +278,17 @@ void Application::flightsArrivingPerCity(std::string City)
         return a.second > b.second;
     });
 
-    // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
 
-   // std::cout << "Flights arriving per City (Descending order):" << std::endl;
     for (const auto& entry : sortedCities)
     {
         if(entry.first ==  City) std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
     }
 }
+
+/**
+ * Function that finds out the number o flights an airline does
+ * Time Complexity: O(|V|+|E|)
+ **/
 
 void Application::flightsPerAirline(std::string airlineName)
 {
@@ -295,17 +316,18 @@ void Application::flightsPerAirline(std::string airlineName)
 
     std::vector<std::pair<std::string, int>> sortedCities(cityFlightCount.begin(), cityFlightCount.end());
     std::sort(sortedCities.begin(), sortedCities.end(), [](const auto& a, const auto& b) {
-        return a.second > b.second;
-    });
+        return a.second > b.second;});
 
-    // LATER ADD A MENU ASKING FOR HOW MANY VALUES DO YOU WANT, SO WE DONT HAVE TO PRINT EVERYTHING!
-
-  //  std::cout << "Total number of flights each airline has (Descending order):" << std::endl;
     for (const auto& entry : sortedCities)
     {
         if(entry.first == airlineName) std::cout << entry.first << ": " << entry.second << " flights" << std::endl;
     }
 }
+
+/**
+ * Function that finds out given an airport and a number of layover the number of airports, cities and countries reacheable.
+ * Time Complexity: O(|V|+|E|)
+ **/
 
 void Application::reachableDestinations(std::string airport,int n)
 {
@@ -348,6 +370,10 @@ void Application::reachableDestinations(std::string airport,int n)
 
 
 }
+/**
+ * Function that finds out the essential airports to the whole system, this means that components would be separeted if we took out his airports
+ * Time Complexity: O(|V|+|E|)
+ **/
 
 bool inStack(std::stack<Airport*>& s, Airport* airport) ;
 void dfs_essential(Graph graph, Airport* airport, std::set<Airport*>& res, std::stack<Airport*>& s, int index);
@@ -427,6 +453,11 @@ bool inStack(std::stack<Airport*>& s, Airport* airport) {
     return false;
 }
 
+/**
+ * Function that finds out the airpots that get more traffic this means more planes arriving+leaving
+ * Time Complexity: O(nlog(n)) due to sort algorithm
+ **/
+
 void Application::greatestAirtraffic(int k) {
 
     std::vector<std::pair<Airport*,int>> outcome;
@@ -445,6 +476,11 @@ void Application::greatestAirtraffic(int k) {
     }
 }
 
+/**
+ * Function that finds out the diameter of the graph which means the points that are the further apart
+ * In practical terms it means the airports that you need the maximum number of layovers to get to (from a source one).
+ * Time Complexity: O(|V|*(|V|+|E|)
+ **/
 void Application::maximumTrip() {
     std::vector<std::pair<Airport*,Airport*>> res;
     int max = 0;
@@ -512,6 +548,13 @@ std::pair<std::vector<Airport*>,int> Application::max_distance_bfs(Airport* sour
     }
     return std::make_pair(airports,max);
 }
+
+/**
+ * Function that finds out the most effient way to get from a place to another, you might use
+ *  an airport, a city or coordinates. If a city has more than one airport, you might get multiple answers
+ * Time Complexity: O(|V|+|E|)
+ **/
+
 void Application::bestFlightOption(std::pair<std::string, int> source, std::pair<std::string, int> dest) {
 
     std::vector<Airport *> origin;
@@ -530,16 +573,21 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
     else if (source.second == 2) // CITY
         for (auto airport : cityMap[source.first])
             origin.push_back(graph.findAirport(airport));
-    else {
+
+    else if(source.second == 3)
+    {
         float lowest = std::numeric_limits<float>::max();
-        for (auto airport : graph.getAirports()) {
+
+        for (auto airport : graph.getAirports())
+        {
             float distance = airport.second->distanceToPoint(source.first);
             if (distance < lowest) {
                 origin.clear();
                 origin.push_back(graph.findAirport(airport.first));
                 lowest = distance;
                 if (lowest == 0) break; // Avoid further checks if distance is zero
-            } else if (distance == lowest)
+            }
+            else if (distance == lowest)
                 origin.push_back(graph.findAirport(airport.first));
         }
     }
@@ -556,7 +604,9 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
     else if (dest.second == 2) //CITY
         for (auto airport : cityMap[dest.first])
             destination.push_back(graph.findAirport(airport));
-    else {
+
+    else if(dest.second == 3)
+    {
         float lowest = std::numeric_limits<float>::max();
         for (auto airport : graph.getAirports()) {
             float distance = airport.second->distanceToPoint(dest.first);
@@ -565,7 +615,8 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
                 destination.push_back(graph.findAirport(airport.first));
                 lowest = distance;
                 if (lowest == 0) break; // Avoid further checks if distance is zero
-            } else if (distance == lowest)
+            }
+            else if (distance == lowest)
                 destination.push_back(graph.findAirport(airport.first));
         }
     }
@@ -577,7 +628,7 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
 
     std::queue<std::pair<Airport *, std::vector<Airport *>>> q;
 
-    // Initialize the queue with each origin airport and its corresponding route
+
     for (auto &startAirport : origin) {
         std::vector<Airport *> startRoute = {startAirport};
         q.push({startAirport, startRoute});
@@ -595,7 +646,8 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
         std::vector<Airport *> currentRoute = current.second;
 
         for (auto flight : currentAirport->getFlights()) {
-            if (!flight.getDest()->isVisited()) {
+            if (!flight.getDest()->isVisited())
+            {
                 flight.getDest()->setVisited(true);
                 flight.getDest()->setStopCount(currentAirport->getStopCount() + 1);
 
@@ -604,8 +656,8 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
 
                 q.push({flight.getDest(), newRoute});
 
-                if (std::find(destination.begin(), destination.end(), flight.getDest()) != destination.end()) {
-                    // Check if the destination airport is reached
+                if (std::find(destination.begin(), destination.end(), flight.getDest()) != destination.end())
+                {
                     if (flight.getDest()->getStopCount() < minStops) {
                         allRoutes.clear();
                         minStops = flight.getDest()->getStopCount();
@@ -622,8 +674,8 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
     std::cout << "Minimum stops to reach destination: " << minStops << std::endl;
     std::cout << "All routes with minimum stops:" << std::endl;
     for (auto &route : allRoutes) {
-        size_t routeSize = route.size();
-        for (size_t i = 0; i < routeSize; ++i) {
+        auto routeSize = route.size();
+        for (auto i = 0; i < routeSize; ++i) {
             std::cout << route[i]->getName() << "(" << route[i]->getCode() << ")";
             if (i < routeSize - 1) {
                 std::cout << " -> ";
@@ -633,6 +685,11 @@ void Application::bestFlightOption(std::pair<std::string, int> source, std::pair
     }
 }
 
+/**
+ * Function that finds out the most effient way to get from a place to another, you might use
+ *  an airport, a city or coordinates but adds a filter with the only airlines that we are allowed to use.
+ * Time Complexity: O(|V|+|E|)
+ **/
 
 void Application::bestFlightOptionAirline(std::pair<std::string, int> source, std::pair<std::string, int> dest, std::vector<std::string> chosenAirlines) {
     std::vector<Airport *> origin;
@@ -793,6 +850,11 @@ void Application::bestFlightOptionAirline(std::pair<std::string, int> source, st
         }
     }
 }
+
+/**
+ * Function that validates the that it recieves, this means finds out if the city or airport are valid
+ * Time Complexity: O(n)
+ **/
 
 bool Application::validateData(std::string data) {
 

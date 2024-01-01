@@ -5,7 +5,8 @@
 int main() {
     Application app;
     int key = -1;
-    while (key != 0) {
+    while (key != 0)
+    {
         std::cout << "¡......................................................¡" << std::endl;
         std::cout << "|            Flight Management System Menu             |" << std::endl;
         std::cout << "|                                                      |" << std::endl;
@@ -16,10 +17,10 @@ int main() {
         std::cout << "|0. Exit                                               |" << std::endl;
         std::cout << "|                                                      |" << std::endl;
         std::cout << "!......................................................!" << std::endl;
-        // ... Menu options
         std::cin >> key;
 
-        switch (key) {
+        switch (key)
+        {
             case 1: {
                 int key1 = -1;
                 while (key1 != 0) {
@@ -71,8 +72,8 @@ int main() {
                     std::cout << "|                                                      |" << std::endl;
                     std::cout << "¡......................................................¡" << std::endl;
                     std::cin >> key2;
-                    switch (key2) {
-
+                    switch (key2)
+                    {
                         case 1:
                         {
                             std::string airportCode;
@@ -89,7 +90,6 @@ int main() {
                                 std::cout << "¡......................................................¡" << std::endl;
                                 std::cout << "|                 NOT A VALID AIRPORT                  |" << std::endl;
                                 std::cout << "¡......................................................¡" << std::endl;
-
                             }
                             break;
                         }
@@ -293,7 +293,6 @@ int main() {
                 std::cout << "|                                                      |" << std::endl;
                 std::cout << "|1. No filter                                          |" << std::endl;
                 std::cout << "|2. Choose Airlines                                    |" << std::endl;
-                std::cout << "|3. Less Airlines                                      |" << std::endl;
                 std::cout << "¡......................................................¡" << std::endl;
                 std::cin >> key4;
 
@@ -302,7 +301,6 @@ int main() {
                     case 1:
                     {
                         if(destType>0&&destType<4 && sourceType>0 && sourceType<4)
-                            if(app.validateData(source)&&app.validateData(dest))
                                 app.bestFlightOption({source,sourceType},{dest,destType});
 
                         break;
@@ -329,13 +327,7 @@ int main() {
                             count++;
                         }
                         if(destType>0&&destType<4 && sourceType>0 && sourceType<4)
-                            if(app.validateData(source)&&app.validateData(dest))
                                 app.bestFlightOptionAirline({source,sourceType},{dest,destType},res);
-                    }
-                    case 3:
-                    {
-                        //add later
-
                     }
 
                     default:
@@ -348,6 +340,7 @@ int main() {
                 }
 
             }
+            default:break;
         }
     }
 }

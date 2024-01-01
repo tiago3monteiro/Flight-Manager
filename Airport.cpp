@@ -114,6 +114,11 @@ void Airport::setStopCount(int stopCount) {
     Airport::stopCount = stopCount;
 }
 
+/**
+ * Function that calculates the distance from an airport to some coordinates
+ * Time Complexity: O(1)
+ **/
+
 float Airport::distanceToPoint(std::string point) {
     auto commaPos = point.find(',');
     auto x = point.substr(0, commaPos);

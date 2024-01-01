@@ -29,7 +29,6 @@ public:
     void essencialAirports();
     void bestFlightOption(std::pair<std::string ,int>source, std::pair<std::string ,int>dest);
     void bestFlightOptionAirline(std::pair<std::string ,int>source, std::pair<std::string ,int>dest, std::vector<std::string> airlines);
-    void bestFlightLessAirlines(std::pair<std::string ,int>source, std::pair<std::string ,int>dest);
     bool validateData(std::string data);
 
 private:
