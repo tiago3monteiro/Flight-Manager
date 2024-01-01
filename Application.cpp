@@ -21,7 +21,7 @@
  **/
 Application::Application()
 {
-    std::ifstream in("airports.csv");
+    std::ifstream in("../csv/airports.csv");
     std::string line;
     std::getline(in, line, '\n'); // taking out the first line;
     while (std::getline(in, line, '\n'))
@@ -60,7 +60,7 @@ Application::Application()
         graph.addAirport(airport);
     }
 
-    std::ifstream in1("airlines.csv");
+    std::ifstream in1("../csv/airlines.csv");
     std::getline(in1, line, '\n');
     while (std::getline(in1, line, '\n'))
     {
@@ -74,7 +74,7 @@ Application::Application()
         airlines[words[0]] = airline;
     }
 
-    std::ifstream in2("flights.csv");
+    std::ifstream in2("../csv/flights.csv");
     std::getline(in2, line, '\n');
     int i = 0;
     while (std::getline(in2, line, '\n')){
