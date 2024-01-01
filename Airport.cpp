@@ -140,3 +140,13 @@ float Airport::distanceToPoint(std::string point) {
     const float EarthRadiusKm = 6371.0f; // Earth's radius in kilometers
     return EarthRadiusKm * c;
 }
+
+std::vector<Airline> Airport::getFlightsTo(Airport *&pAirport) {
+
+    std::vector<Airline> res;
+    for(auto flight: this->getFlights())
+        if(flight.getDest() == pAirport)
+            res.push_back(flight.getAirline());
+
+    return res;
+}
